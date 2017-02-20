@@ -87,10 +87,14 @@ export default {
 		 */
 		valChangeAfterHook() {
 			let that = this;
-			window.vueEvents.$emit('dataRangeChangeValue',  {
-				val  : that.val,
-				data : that.range[that.val]
-			});
+
+			if (window.vueEvents) {
+				window.vueEvents.$emit('dataRangeChangeValue',  {
+					val  : that.val,
+					data : that.range[that.val]
+				});
+			}
+
 		},
 		/**
 		 * Change value handel.
@@ -173,6 +177,12 @@ export default {
 
 		if (that.range[that.val].isEmpty) {
 			that.valFindNoEmpty();
+		}
+
+		if (window.vueEvents) {
+			window.vueEvents.$on('cartogramsDataRangeUpdate', function () {
+				that.$forceUpdate();
+			});
 		}
 
 	},
