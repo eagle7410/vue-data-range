@@ -26,7 +26,6 @@
 			:step="step"
 			@change= 'valChange()'
 			>
-			<span>{{val}}</span>
 	</div>
 </template>
 
@@ -165,7 +164,7 @@ export default {
 				break;
 			}
 		}
-		
+
 		that.max = that.range.length - 1;
 
 		if(that.max === -1) {
