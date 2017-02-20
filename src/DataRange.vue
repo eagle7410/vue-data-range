@@ -22,6 +22,7 @@
 			:style="styleInput()"
 			:min="min"
 			:max="max"
+			:value="val"
 			:step="step"
 			@change= 'valChange()'
 			>
