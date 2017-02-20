@@ -18,6 +18,47 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
 	<script src="/dist/build.js"></script>
+	<style>
+	#data-range > .scale > .period.empty {
+		background: #ccc;
+	}
+	.data-range-labels.active {
+		color: red;
+	}
+	#data-range {
+		width : 800px;
+	}
+	#data-range > .labels, #data-range > .labels > span {
+		position: absolute;
+	}
+
+	#data-range > .input {
+		position: absolute;
+		cursor: pointer;
+		-webkit-appearance: none;
+		outline: none;
+		opacity: 0.5;
+	}
+
+	#data-range > .input ::-ms-track,
+	#data-range > .input::-moz-range-track,
+	#data-range > .input:focus::-webkit-slider-runnable-track,
+	#data-range > .input::-webkit-slider-runnable-track {
+		display: none;
+		opacity: 0.1;
+	}
+
+	#data-range > .scale {
+		position: absolute;
+		padding: 0px;
+	}
+
+	#data-range > .scale > .period {
+		position: absolute;
+		height: 15px;
+		border: 1px #000 solid;
+	}
+	</style>
 	<script>
 	let range = [
 		{
@@ -73,7 +114,7 @@
 	});
 
 	</script>
-	<style>
+	<style media="screen">
 	.wrap {
 		padding: 100px;
 	}
@@ -93,46 +134,6 @@
 
 	a {
 	  color: #42b983;
-	}
-
-	#data-range > .scale > .period.empty {
-		background: #ccc;
-	}
-	.data-range-labels.active {
-		color: red;
-	}
-	#data-range {
-		width : 800px;
-	}
-	#data-range > .labels, #data-range > .labels > span {
-		position: absolute;
-	}
-
-	#data-range > .input {
-		position: absolute;
-		cursor: pointer;
-		-webkit-appearance: none;
-		outline: none;
-		opacity: 0.5;
-	}
-
-	#data-range > .input ::-ms-track,
-	#data-range > .input::-moz-range-track,
-	#data-range > .input:focus::-webkit-slider-runnable-track,
-	#data-range > .input::-webkit-slider-runnable-track {
-		display: none;
-		opacity: 0.1;
-	}
-
-	#data-range > .scale {
-		position: absolute;
-		padding: 0px;
-	}
-
-	#data-range > .scale > .period {
-		position: absolute;
-		height: 15px;
-		border: 1px #000 solid;
 	}
 	</style>
   </body>

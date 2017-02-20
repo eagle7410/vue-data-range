@@ -1,5 +1,5 @@
 <template>
-	<div id="data-range" >
+	<div id="data-range" v-show="range.length">
 		<div class="labels" >
 			<span
 				v-for="(part, inx) in range"
@@ -86,7 +86,7 @@ export default {
 		 */
 		valChangeAfterHook() {
 			let that = this;
-			that.$emit('dataRangeChangeValue',  {
+			window.vueEvents.$emit('dataRangeChangeValue',  {
 				val  : that.val,
 				data : that.range[that.val]
 			});
@@ -151,12 +151,9 @@ export default {
 	},
 	created() {
 		let that = this;
-
 		if (that.dataRange.length) {
 			that.range = that.dataRange;
 		}
-
-		// that.range = range;
 		that.val = 0;
 		for (let i = 0; i < that.range.length; ++i) {
 			let p = that.range[i];
