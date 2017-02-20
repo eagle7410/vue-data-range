@@ -9,7 +9,7 @@
 		<div id="app">
 			<h1>RUN</h1>
 			<div class="wrap">
-				<data-range></data-range>
+				<data-range :data-range="range"></data-range>
 			</div>
 		</div>
 	</div>
@@ -19,8 +19,58 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
 	<script src="/dist/build.js"></script>
 	<script>
-
-	app = new Vue({ el: '#app' });
+	let range = [
+		{
+			label : '2015<br/>Весна',
+			val : 1,
+			isEmpty : true
+		},
+		{
+			label : '2015<br/>Лето',
+			val : 2,
+			isEmpty : true
+		},
+		{
+			label : '2015<br/>Осень',
+			val : 3,
+			isEmpty : true
+		},
+		{
+			label : '2015<br/>3има',
+			val : 4,
+			isFirst : true
+		},
+		{
+			label : '2016<br/>3има',
+			val : 5
+		},
+		{
+			label : '2016<br/>Весна',
+			val : 6
+		},
+		{
+			label : '2016<br/>Лето',
+			val : 7
+		},
+		{
+			label : '2016<br/>Осень',
+			val : 8
+		},
+		{
+			label : '2016<br/>Зима',
+			val : 9
+		},
+		{
+			label : '2017<br/>Зима',
+			val : 10
+		}
+	];
+	app = new Vue({
+		el: '#app',
+		data : {
+				range : range
+		}
+	});
 
 	</script>
 	<style>
@@ -44,11 +94,45 @@
 	a {
 	  color: #42b983;
 	}
-	.data-range-labels.empty {
+
+	#data-range > .scale > .period.empty {
 		background: #ccc;
 	}
 	.data-range-labels.active {
 		color: red;
+	}
+	#data-range {
+		width : 800px;
+	}
+	#data-range > .labels, #data-range > .labels > span {
+		position: absolute;
+	}
+
+	#data-range > .input {
+		position: absolute;
+		cursor: pointer;
+		-webkit-appearance: none;
+		outline: none;
+		opacity: 0.5;
+	}
+
+	#data-range > .input ::-ms-track,
+	#data-range > .input::-moz-range-track,
+	#data-range > .input:focus::-webkit-slider-runnable-track,
+	#data-range > .input::-webkit-slider-runnable-track {
+		display: none;
+		opacity: 0.1;
+	}
+
+	#data-range > .scale {
+		position: absolute;
+		padding: 0px;
+	}
+
+	#data-range > .scale > .period {
+		position: absolute;
+		height: 15px;
+		border: 1px #000 solid;
 	}
 	</style>
   </body>

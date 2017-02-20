@@ -1,20 +1,20 @@
-<style media="screen">
-	#data-range {
-		width : 600px;
-	}
-	#data-range > .labels, #data-range > .labels > span {
-		position: absolute;
-	}
-</style>
 <template>
-	<div id="data-range">
+	<div id="data-range" >
 		<div class="labels" >
 			<span
 				v-for="(part, inx) in range"
 				v-html="part.label"
 				:style="styleLabel()"
-				:data-num="inx"
 				:class ='classLabel(part, inx)'
+				:data-num="inx"
+				></span>
+		</div>
+		<div class="scale">
+			<span
+				v-for="(part, inx) in range"
+				:style="stylePeriod()"
+				:class ='classPeriod(part, inx)'
+				:data-num="inx"
 				></span>
 		</div>
 		<input type="range" class="input"
@@ -29,55 +29,10 @@
 </template>
 
 <script>
-let range = [
-	{
-		label : '2015<br/>Весна',
-		val : 1,
-		isEmpty : true
-	},
-	{
-		label : '2015<br/>Лето',
-		val : 2,
-		isEmpty : true
-	},
-	{
-		label : '2015<br/>Осень',
-		val : 3,
-		isEmpty : true
-	},
-	{
-		label : '2015<br/>3има',
-		val : 4,
-		isFirst : true
-	},
-	{
-		label : '2016<br/>3има',
-		val : 5
-	},
-	{
-		label : '2016<br/>Весна',
-		val : 6
-	},
-	{
-		label : '2016<br/>Лето',
-		val : 7
-	},
-	{
-		label : '2016<br/>Осень',
-		val : 8
-	},
-	{
-		label : '2016<br/>Зима',
-		val : 9
-	},
-	{
-		label : '2017<br/>Зима',
-		val : 10
-	}
-];
+
 export default {
 	props : {
-		data : {
+		dataRange : {
 			type: Array,
 			default: function () {
 				return [];
@@ -90,6 +45,7 @@ export default {
 	},
 	data () {
 		return {
+			widthSteep : 0,
 			range : [],
 			step : 1,
 			min : 0,
@@ -155,6 +111,18 @@ export default {
 		classLabel (data, num) {
 			let c = 'data-range-labels';
 
+			if (this.val == num) {
+				c += ' active';
+			}
+
+			return c;
+		},
+		/**
+		 * Get class for period.
+		 */
+		classPeriod (data, num) {
+			let c = 'period';
+
 			if (data.isEmpty) {
 				c += ' empty';
 			}
@@ -176,12 +144,19 @@ export default {
 		 */
 		styleInput() {
 			return `width: ${this.width}px;`
+		},
+		stylePeriod () {
+			return `width: ${this.widthSteep}px;`
 		}
-
 	},
 	created() {
 		let that = this;
-		that.range = range;
+
+		if (that.dataRange.length) {
+			that.range = that.dataRange;
+		}
+
+		// that.range = range;
 		that.val = 0;
 		for (let i = 0; i < that.range.length; ++i) {
 			let p = that.range[i];
@@ -204,16 +179,26 @@ export default {
 	mounted () {
 		let that = this;
 		that.width = $('#data-range').width();
-		let pos = $('#data-range > .input').position();
+		that.widthSteep = that.width / (that.range.length - 1);
+		let pos = $('#data-range > .scale').position();
 
 		$('.data-range-labels').each(function() {
 			let $el = $(this);
 			let num = $el.data('num');
-			let elWidth = 0;
 
 			$el.offset({
 				top : pos.top - 40,
-				left : ((pos.left - 20) + (that.width / (that.range.length - 1) ) * num)
+				left : ((pos.left - that.widthLabel/ 2) + that.widthSteep * num)
+			});
+		});
+
+		$('#data-range > .scale > .period').each(function() {
+			let $el = $(this);
+			let num = $el.data('num');
+
+			$el.offset({
+				top : pos.top + 3,
+				left : ((pos.left - that.widthLabel ) + that.widthSteep * num)
 			});
 		});
 
