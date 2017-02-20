@@ -181,6 +181,10 @@ export default {
 
 		if (window.vueEvents) {
 			window.vueEvents.$on('cartogramsDataRangeUpdate', function () {
+				if (that.range[that.val].isEmpty) {
+					that.valFindNoEmpty();
+				}
+
 				that.$forceUpdate();
 			});
 		}
