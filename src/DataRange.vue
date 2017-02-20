@@ -130,11 +130,10 @@ export default {
 		 */
 		valChangeAfterHook() {
 			let that = this;
-			that.range[that.val];
-			 console.log('Hook tell', {
-				 val  : that.val,
-				 data : that.range[that.val]
-			 });
+			that.$emit('dataRangeChangeValue',  {
+				val  : that.val,
+				data : that.range[that.val]
+			});
 		},
 		/**
 		 * Change value handel.
@@ -183,7 +182,7 @@ export default {
 	created() {
 		let that = this;
 		that.range = range;
-
+		that.val = 0;
 		for (let i = 0; i < that.range.length; ++i) {
 			let p = that.range[i];
 
@@ -192,7 +191,7 @@ export default {
 				break;
 			}
 		}
-		that.val = 0;
+
 		that.max = that.range.length - 1;
 
 		if(that.max === -1) {
@@ -200,12 +199,12 @@ export default {
 		}
 
 		that.valFindNoEmpty();
+
 	},
 	mounted () {
 		let that = this;
-		let $cont = $('#data-range');
+		that.width = $('#data-range').width();
 		let pos = $('#data-range > .input').position();
-		that.width = $cont.width();
 
 		$('.data-range-labels').each(function() {
 			let $el = $(this);
@@ -217,6 +216,8 @@ export default {
 				left : ((pos.left - 20) + (that.width / (that.range.length - 1) ) * num)
 			});
 		});
+
+		that.$forceUpdate();
 	}
 }
 </script>
