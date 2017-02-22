@@ -47,6 +47,8 @@ export default {
 	data () {
 		return {
 			widthSteep : 0,
+			isAllEmpty : false,
+			isFirst : 0,
 			range : [],
 			step : 1,
 			min : 0,
@@ -65,6 +67,8 @@ export default {
 			let isNext = true;
 			let len = that.range.length;
 
+			that.isAllEmpty = false;
+
 			while (isNext && count < len) {
 				shift++;
 
@@ -76,11 +80,16 @@ export default {
 
 				if (next && !next.isEmpty) {
 					isNext = false;
-					return that.val = shift;
+					that.val = shift;
+					return that.valChangeAfterHook();
 				}
 
 				count++;
 			}
+			that.val = that.isFirst;
+			that.isAllEmpty =  true;
+			that.valChangeAfterHook();
+
 		},
 		/**
 		 * Hook after change value.
@@ -101,6 +110,11 @@ export default {
 		 */
 		valChange () {
 			let that = this;
+
+			if (that.isAllEmpty) {
+				that.val = that.isFirst;
+				return;
+			}
 
 			let p = that.range[that.val];
 
@@ -156,15 +170,18 @@ export default {
 	},
 	created() {
 		let that = this;
+
 		if (that.dataRange.length) {
 			that.range = that.dataRange;
 		}
+
 		that.val = 0;
 		for (let i = 0; i < that.range.length; ++i) {
 			let p = that.range[i];
 
 			if (p.isFirst) {
 				that.val = i;
+				that.isFirst = i;
 				break;
 			}
 		}
