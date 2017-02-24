@@ -5,58 +5,80 @@
     <title>vue-data-range</title>
   </head>
   <body>
-    <div id="app">
-		<div id="app">
-			<h1>RUN</h1>
+	<div id="app">
+		<h1>RUN</h1>
 			<div class="wrap">
 				<data-range :data-range="range"></data-range>
-			</div>
+			</div	>
 		</div>
 	</div>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" charset="utf-8"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		// $( function() {
+		// 	var $range = $('#data-range > .input').slider({
+        //             value: 15,
+        //             step : 1,
+        //             min : 0,
+        //             max : 14,
+        //             slide: function (ev, ui) {
+		// 				//TODO IGOR: clear
+		// 				 console.log('ui.value', ui.value);
+        //                 // w.vueEvents.$emit('cartogramsLegendsGradationChange', that.dataToEvent(ui.values));
+        //                 $range.slider('option','value', 5);
+		// 			 $(this).slider('value',5);
+        //             }
+        //         });
+		// 	$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+		// 	  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+		// 	}
+		// );
+	</script>
 	<script src="/dist/build.js"></script>
 	<style>
-	#data-range > .scale > .period.empty {
-		background: #ccc;
-	}
+
 	.data-range-labels.active {
 		color: red;
 	}
-	#data-range {
+
+	#data-range, #data-range > .input, #data-range > .labels {
 		width : 800px;
 	}
-	#data-range > .labels, #data-range > .labels > span {
-		position: absolute;
+
+	#data-range > .labels {
+		list-style-type: none;
+		padding : 0;
+		left : 10%;
 	}
 
+	#data-range > .labels > li {
+		display: inline-block;
+	}
 	#data-range > .input {
-		position: absolute;
 		cursor: pointer;
-		-webkit-appearance: none;
-		outline: none;
-		opacity: 0.5;
+		width : 100%;
 	}
-
-	#data-range > .input ::-ms-track,
-	#data-range > .input::-moz-range-track,
-	#data-range > .input:focus::-webkit-slider-runnable-track,
-	#data-range > .input::-webkit-slider-runnable-track {
-		display: none;
-		opacity: 0.1;
+	#data-range > .input > .years {
+		position: relative;
+		height: 10px;
+		border: 1px solid #000;
+		background: #FFF;
+		float: left;
 	}
-
-	#data-range > .scale {
-		position: absolute;
-		padding: 0px;
+	#data-range > .years:last-child {
+		left: 99.8%;
+		top: -10px;
+		position: relative;
+		border: 1px solid #000;
 	}
-
-	#data-range > .scale > .period {
-		position: absolute;
-		height: 15px;
-		border: 1px #000 solid;
+	#data-range > .input  > .years.empty, #data-range > .years.empty {
+		background: #ccc;
 	}
 	</style>
 	<script>
@@ -74,19 +96,20 @@
 		{
 			label : '2015<br/>Осень',
 			val : 3,
-			isEmpty : true
+			isEmpty : false
 		},
 		{
-			label : '2017<br/>Зима',
-			val : 10,
-			isEmpty : true,
+			label : '2015<br/>3има',
+			val : 4,
+			isEmpty : false,
 			isFirst : true
-		}
+		},
+
 	];
 	app = new Vue({
 		el: '#app',
 		data : {
-				range : range
+			range : range
 		}
 	});
 
