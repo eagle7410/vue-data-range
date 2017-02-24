@@ -105,7 +105,7 @@ export default {
 				that.range.map((data, inx) => {
 					let $el = $('#year_' + inx);
 					let cls = 'empty';
-					
+
 					$el.removeClass(cls);
 
 					if (data && data.isEmpty) {
@@ -127,7 +127,8 @@ export default {
 			min   : that.min,
 			max   : that.max,
 			slide : (ev, ui) =>  {
-				if (that.range[ui.value] || that.range[ui.value].isEmpty) {
+				
+				if (!that.range[ui.value] || that.range[ui.value].isEmpty) {
 					return false;
 				}
 
