@@ -66,18 +66,10 @@ export default {
 		},
 		sliderIni () {
 			let that = this;
-			//TODO IGOR: clear
-			 console.log('Reint' );
+
 		 	that.setFirst();
-			 let $slide = $('#slider');
 
-			 $('.years').remove();
-
-			 if ($slide.length) {
-				 $slide.html('');
-			 }
-
-			$('#data-range > .input').slider({
+			let $slider = $('#data-range > .input').slider({
 				value : that.val,
 				step  : that.step,
 				min   : that.min,
@@ -103,7 +95,7 @@ export default {
 					setClass += ' empty'
 				}
 
-				$('#data-range > .input')[call]($('<div>', {
+				$slider[call]($('<div>', {
 					id : 'year_' + num,
 					class : setClass,
 					style : `width: ${that.percent}%;height: 10px;`
@@ -117,6 +109,7 @@ export default {
 			addYear(that.range[i].isEmpty, i, true);
 		},
 		setFirst () {
+			let that = this;
 			for (let i = 0; i < that.range.length; ++i) {
 				let p = that.range[i];
 
@@ -147,9 +140,10 @@ export default {
 
 		if (w.vueEvents) {
 			w.vueEvents.$on('cartogramsDataRangeUpdate', function () {
-				//TODO IGOR: clear
-				 console.log('UPDATE' );
-				that.sliderIni();
+				that.setFirst();
+
+				$('#data-range > .input').slider('value', that.val);
+
 				that.range.map((data, inx) => {
 					let $el = $('#year_' + inx);
 					let cls = 'empty';
