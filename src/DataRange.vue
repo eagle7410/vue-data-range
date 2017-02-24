@@ -53,14 +53,6 @@ export default {
 
 		},
 		/**
-		 * Change value handel.
-		 */
-		valChange () {
-			let that = this;
-
-			that.valChangeAfterHook();
-		},
-		/**
 		 * Get class for label.
 		 */
 		classLabel (data, num) {
@@ -72,6 +64,68 @@ export default {
 
 			return c;
 		},
+		sliderIni () {
+			let that = this;
+			//TODO IGOR: clear
+			 console.log('Reint' );
+		 	that.setFirst();
+			 let $slide = $('#slider');
+
+			 $('.years').remove();
+
+			 if ($slide.length) {
+				 $slide.html('');
+			 }
+
+			$('#data-range > .input').slider({
+				value : that.val,
+				step  : that.step,
+				min   : that.min,
+				max   : that.max,
+				slide : (ev, ui) =>  {
+
+					if (!that.range[ui.value] || that.range[ui.value].isEmpty) {
+						return false;
+					}
+
+					that.val = ui.value;
+					that.valChangeAfterHook();
+				}
+			});
+
+			let cls = 'years';
+
+			let addYear = (isEmpty, num, isAfter) => {
+				let call = (isAfter || false) ? 'after' :  'append';
+				let setClass = cls;
+
+				if (isEmpty) {
+					setClass += ' empty'
+				}
+
+				$('#data-range > .input')[call]($('<div>', {
+					id : 'year_' + num,
+					class : setClass,
+					style : `width: ${that.percent}%;height: 10px;`
+				}));
+			}
+
+			for (var i = 0; i< that.max ; ++i) {
+				addYear(that.range[i].isEmpty, i);
+			}
+
+			addYear(that.range[i].isEmpty, i, true);
+		},
+		setFirst () {
+			for (let i = 0; i < that.range.length; ++i) {
+				let p = that.range[i];
+
+				if (p.isFirst) {
+					that.val = i;
+					break;
+				}
+			}
+		}
 	},
 	created() {
 		let that = this;
@@ -82,14 +136,6 @@ export default {
 		}
 
 		that.val = 0;
-		for (let i = 0; i < that.range.length; ++i) {
-			let p = that.range[i];
-
-			if (p.isFirst) {
-				that.val = i;
-				break;
-			}
-		}
 
 		that.max = that.range.length - 1;
 
@@ -101,7 +147,9 @@ export default {
 
 		if (w.vueEvents) {
 			w.vueEvents.$on('cartogramsDataRangeUpdate', function () {
-
+				//TODO IGOR: clear
+				 console.log('UPDATE' );
+				that.sliderIni();
 				that.range.map((data, inx) => {
 					let $el = $('#year_' + inx);
 					let cls = 'empty';
@@ -121,46 +169,10 @@ export default {
 	mounted () {
 		let that = this;
 		let labelWidth = that.percent * $('#data-range').width() / 100;
-		let $range = $('#data-range > .input').slider({
-			value : that.val,
-			step  : that.step,
-			min   : that.min,
-			max   : that.max,
-			slide : (ev, ui) =>  {
-				
-				if (!that.range[ui.value] || that.range[ui.value].isEmpty) {
-					return false;
-				}
-
-				that.val = ui.value;
-			}
-		});
 		let $labels = $('#data-range > .labels');
+		that.sliderIni();
 		$labels.width($labels.width() + labelWidth);
 		$labels.find('li').width(labelWidth);
-
-		let cls = 'years';
-
-		let addYear = (isEmpty, num, isAfter) => {
-			let call = (isAfter || false) ? 'after' :  'append';
-			let setClass = cls;
-
-			if (isEmpty) {
-				setClass += ' empty'
-			}
-
-			$range[call]($('<div>', {
-				id : 'year_' + num,
-				class : setClass,
-				style : `width: ${that.percent}%;height: 10px;`
-			}));
-		}
-
-		for (var i = 0; i< that.max ; ++i) {
-			addYear(that.range[i].isEmpty, i);
-		}
-
-		addYear(that.range[i].isEmpty, i, true);
 
 	}
 }
