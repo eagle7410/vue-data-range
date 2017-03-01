@@ -86,7 +86,7 @@ export default {
 			});
 
 			let cls = 'years';
-
+			let idPref = 'year_';
 			let addYear = (isEmpty, num, isAfter) => {
 				let call = (isAfter || false) ? 'after' :  'append';
 				let setClass = cls;
@@ -96,11 +96,24 @@ export default {
 				}
 
 				$slider[call]($('<div>', {
-					id : 'year_' + num,
+					id : idPref + num,
+					num : num,
 					class : setClass,
 					style : `width: ${that.percent}%;height: 10px;`
 				}));
 			}
+
+			$slider.off('click');
+			$(document).on('click', '.' + cls, (ev) => {
+				let $el = $(ev.target);
+				let num = $el.attr('num');
+
+				if (num > -1 && !that.range[num].isEmpty) {
+					that.val = num
+					$slider.slider('value', num);
+					that.valChangeAfterHook();
+				}
+			});
 
 			for (var i = 0; i< that.max ; ++i) {
 				addYear(that.range[i].isEmpty, i);
@@ -110,14 +123,42 @@ export default {
 		},
 		setFirst () {
 			let that = this;
-			for (let i = 0; i < that.range.length; ++i) {
+			let noEmpty = false;
+			let len = that.range.length;
+			for (var i = 0; i < len; ++i) {
 				let p = that.range[i];
 
+				if (!p.isEmpty) {
+					noEmpty = i;
+				}
+
 				if (p.isFirst) {
+					let isChange;
+
+					if (p.isEmpty) {
+						if (noEmpty !== false) {
+							isChange = that.val != noEmpty;
+							that.val = noEmpty;
+							return isChange;
+						} else {
+							for (let k = (i+1); k<len; ++k) {
+								p = that.range[k];
+								if (!p.isEmpty) {
+									isChange = that.val != k;
+									that.val = k;
+									return isChange;
+								}
+							}
+						}
+					}
+
+					isChange = that.val != i;
 					that.val = i;
-					break;
+					return isChange;
 				}
 			}
+
+			return false;
 		}
 	},
 	created() {
@@ -140,7 +181,12 @@ export default {
 
 		if (w.vueEvents) {
 			w.vueEvents.$on('cartogramsDataRangeUpdate', function () {
-				that.setFirst();
+
+				if (that.range[that.val].isEmpty) {
+					that.setFirst()
+				
+					that.valChangeAfterHook();
+				};
 
 				$('#data-range > .input').slider('value', that.val);
 
