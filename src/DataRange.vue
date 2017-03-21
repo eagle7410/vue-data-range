@@ -25,6 +25,10 @@ export default {
 		widthLabel : {
 			type: Number,
 			default : 40
+		},
+		heightLabel : {
+			type : Number,
+			default : 2
 		}
 	},
 	data () {
@@ -99,7 +103,7 @@ export default {
 					id : idPref + num,
 					num : num,
 					class : setClass,
-					style : `width: ${that.percent}%;height: 10px;`
+					style : `width: ${that.percent}%;height: ${that.heightLabel}px;`
 				}));
 			}
 
@@ -184,7 +188,7 @@ export default {
 
 				if (that.range[that.val].isEmpty) {
 					that.setFirst()
-				
+
 					that.valChangeAfterHook();
 				};
 
