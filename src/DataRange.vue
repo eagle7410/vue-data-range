@@ -74,7 +74,7 @@ export default {
 		 */
 		classLabel (data, num) {
 			let that = this;
-			let c = 'data-range-labels ' + that.type;
+			let c = 'data-range-labels ' + that.typeTime;
 
 			if (that.val == num) {
 				c += ' active';
@@ -271,7 +271,7 @@ export default {
 
 		if (w.vueEvents) {
 			w.vueEvents.$on('cartogramsDataRangeUpdate', function (ev) {
-				that.type = ev.typeTime;
+				that.typeTime = ev.typeTime;
 				that.dataRangeToRange(ev.range);
 
 				if (that.range[that.val].isEmpty) {
