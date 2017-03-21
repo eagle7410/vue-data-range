@@ -37,11 +37,11 @@
 
 		#data-range>.labels,
 		#data-range>.labelsYears {
-			list-style-type: none;
 			padding: 0;
 		}
 
 		#data-range>.labels {
+			list-style-type: none;
 			left: 10%;
 		}
 
@@ -90,29 +90,30 @@
 	<script>
 		let rangeYear = [{
 			label: '2015',
-			val: 1
+			"year": 2015,
 		}, {
 			label: '2016',
-			val: 2,
+			"year": 2016,
 			isEmpty: true
 		}, {
 			label: '2017',
-			val: 3,
+			"year": 2017,
 			isEmpty: false
 		}, {
 			label: '2018',
-			val: 4,
+			"year": 2018,
 			isEmpty: false
 		}, {
 			label: '2019',
-			val: 5,
+			"year": 2019,
 			isEmpty: false
 		}, {
 			label: '2020',
-			val: 6,
+			"year": 2020,
 			isEmpty: false,
 			isFirst: true
 		}, ];
+
 		let rangeSes = [{
 			"year": 2012,
 			"num": 2,
@@ -278,7 +279,7 @@
 		app = new Vue({
 			el: '#app',
 			data: {
-				range: rangeSes,
+				range: [],
 				type: 'seasons'
 			}
 		});

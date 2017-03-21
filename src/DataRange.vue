@@ -37,7 +37,7 @@ export default {
 			type : Number,
 			default : 2
 		},
-		type : {
+		typeTime : {
 			type : String,
 			default : 'seasons',
 			validator : (val) => ~['seasons', 'years'].indexOf(val)
@@ -61,7 +61,7 @@ export default {
 			let that = this;
 			let w  = window;
 
-			if (w.vueEvents) {
+			if (w.vueEvents && that.range.length) {
 				w.vueEvents.$emit('dataRangeChangeValue',  {
 					val  : that.val,
 					data : that.range[that.val]
@@ -73,9 +73,10 @@ export default {
 		 * Get class for label.
 		 */
 		classLabel (data, num) {
-			let c = 'data-range-labels';
+			let that = this;
+			let c = 'data-range-labels ' + that.type;
 
-			if (this.val == num) {
+			if (that.val == num) {
 				c += ' active';
 			}
 
@@ -83,9 +84,14 @@ export default {
 		},
 		sliderIni () {
 			let that = this;
+			let widthDataRange = $('#data-range').width();
+			let labelWidth = that.percent * widthDataRange / 100;
+			let $labels = $('#data-range > .labels');
 
 		 	that.setFirst();
-
+			let $input = $('#data-range > .input');
+            $input.find('.years').remove();
+            $input.find('#first-point').remove();
 			let $slider = $('#data-range > .input').slider({
 				value : that.val,
 				step  : that.step,
@@ -104,6 +110,11 @@ export default {
 
 			let cls = 'years';
 			let idPref = 'year_';
+
+			$slider.append($('<div>', {
+				id : 'first-point',
+			}));
+
 			let addYear = (isEmpty, num, isAfter) => {
 				let call = (isAfter || false) ? 'after' :  'append';
 				let setClass = cls;
@@ -132,11 +143,26 @@ export default {
 				}
 			});
 
-			for (var i = 0; i< that.max ; ++i) {
-				addYear(that.range[i].isEmpty, i);
+			if (that.range.length) {
+				for (var i = 0; i< that.max ; ++i) {
+					addYear(that.range[i].isEmpty, i);
+				}
 			}
 
-			addYear(that.range[i].isEmpty, i, true);
+			$labels.find('li').width(labelWidth);
+
+			if (that.years.length) {
+					let $years = $('#data-range > .labelsYears');
+					let width = (100 / that.years.length) * widthDataRange / 100;
+					$years.width(widthDataRange+(labelWidth*2));
+
+					$years.find('.labelYear').each(function() {
+						let $year = $(this);
+						let count = $year.data('count');
+						$year.width(count * labelWidth);
+					});
+
+			}
 		},
 		setFirst () {
 			let that = this;
@@ -176,22 +202,22 @@ export default {
 			}
 
 			return false;
-		}
-	},
-	created() {
-		let that = this;
-		let w = window;
-		let rangeLen = that.dataRange.length;
+		},
+		/**
+		 * property dataRange to range
+		 */
+		dataRangeToRange (range) {
+			let that = this;
+			let rangeLen = range.length;
 
-		if (rangeLen) {
-			that.range = that.dataRange;
-			if (that.type == 'seasons') {
+			if (rangeLen) {
+				that.range = range;
 
 				let currentYear = new Date().getFullYear();
 				let beCurrent = false;
 
 				for (let i = 0; i < rangeLen; i++) {
-					let range = that.dataRange[i];
+					let range = that.range[i];
 					let year = range.year;
 					let isBe = false;
 
@@ -226,66 +252,42 @@ export default {
 				}
 
 			}
+
+			that.val = 0;
+			that.max = that.range.length - 1;
+
+			if (that.max === -1) {
+				that.percent = 0;
+			} else {
+				that.percent = 100 / that.max ;
+			}
 		}
+	},
+	created() {
+		let that = this;
+		let w = window;
 
-		that.val = 0;
-
-		that.max = that.range.length - 1;
-
-		if(that.max === -1) {
-			that.max = 0;
-		}
-
-		that.percent = 100 / that.max;
+		that.dataRangeToRange(that.dataRange)
 
 		if (w.vueEvents) {
-			w.vueEvents.$on('cartogramsDataRangeUpdate', function () {
+			w.vueEvents.$on('cartogramsDataRangeUpdate', function (ev) {
+				that.type = ev.typeTime;
+				that.dataRangeToRange(ev.range);
 
 				if (that.range[that.val].isEmpty) {
 					that.setFirst()
-
 					that.valChangeAfterHook();
 				};
 
 				$('#data-range > .input').slider('value', that.val);
-
-				that.range.map((data, inx) => {
-					let $el = $('#year_' + inx);
-					let cls = 'empty';
-
-					$el.removeClass(cls);
-
-					if (data && data.isEmpty) {
-						$el.addClass(cls);
-					}
-				});
-
 				that.$forceUpdate();
+				that.sliderIni();
 			});
 		}
 
 	},
 	mounted () {
-		let that = this;
-		let widthDataRange = $('#data-range').width();
-		let labelWidth = that.percent * widthDataRange / 100;
-		let $labels = $('#data-range > .labels');
-		that.sliderIni();
-		$labels.width($labels.width() + labelWidth);
-		$labels.find('li').width(labelWidth);
-
-		if (that.years.length) {
-				let $years = $('#data-range > .labelsYears');
-				let width = (100 / that.years.length) * widthDataRange / 100;
-				$years.width($labels.width()).css('left' , `${(labelWidth / 2) + (width/2)}px`);
-
-				$years.find('.labelYear').each(function() {
-					let $year = $(this);
-					let count = $year.data('count');
-					$year.width(count * labelWidth);
-				});
-
-		}
+		this.sliderIni();
 	}
 }
 </script>
