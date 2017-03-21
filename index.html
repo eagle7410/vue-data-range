@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>vue-data-range</title>
-  </head>
-  <body>
+
+<head>
+	<meta charset="utf-8">
+	<title>vue-data-range</title>
+</head>
+
+<body>
 	<div id="app">
 		<h1>RUN</h1>
-			<div class="wrap">
-				<data-range :data-range="range"></data-range>
-			</div	>
+		<div class="wrap">
+			<data-range :data-range="range" :type="type"></data-range>
 		</div>
 	</div>
-
+	</div>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
@@ -20,114 +21,291 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script>
-		// $( function() {
-		// 	var $range = $('#data-range > .input').slider({
-        //             value: 15,
-        //             step : 1,
-        //             min : 0,
-        //             max : 14,
-        //             slide: function (ev, ui) {
-        //                 // w.vueEvents.$emit('cartogramsLegendsGradationChange', that.dataToEvent(ui.values));
-        //                 $range.slider('option','value', 5);
-		// 			 $(this).slider('value',5);
-        //             }
-        //         });
-		// 	$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-		// 	  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-		// 	}
-		// );
-	</script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="/dist/build.js"></script>
 	<style>
-	.data-range-labels.active {
-		color: red;
-	}
-	#data-range, #data-range > .input, #data-range > .labels {
-		width : 800px;
-	}
-	#data-range > .labels {
-		list-style-type: none;
-		padding : 0;
-		left : 10%;
-	}
-	#data-range > .labels > li {
-		display: inline-block;
-	}
-	#data-range > .input {
-		cursor: pointer;
-		width : 100%;
-	}
-	#data-range > .input > .years {
-		position: relative;
-		height: 10px;
-		border: 1px solid #000;
-		background: #FFF;
-		float: left;
-	}
-	#data-range > .years:last-child {
-		left: 99.8%;
-		top: -10px;
-		position: relative;
-		border: 1px solid #000;
-	}
-	#data-range > .input  > .years.empty, #data-range > .years.empty {
-		background: #ccc;
-	}
+		.data-range-labels.active {
+			color: red;
+			font-size: 10px;
+		}
+
+		#data-range,
+		#data-range>.input,
+		#data-range>.labels {
+			width: 800px;
+		}
+
+		#data-range>.labels,
+		#data-range>.labelsYears {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		#data-range>.labels {
+			left: 10%;
+		}
+
+		#data-range>.labelsYears {
+			position: absolute;
+		}
+
+		#data-range>.labels>li,
+		#data-range>.labelsYears>span {
+			display: inline-block;
+		}
+
+		#data-range>.labelsYears>span {
+			text-align: left;
+		}
+
+		.data-range-labels {
+			font-size: 0px;
+		}
+
+		#data-range>.input {
+			cursor: pointer;
+			width: 100%;
+		}
+
+		#data-range>.input>.years {
+			position: relative;
+			height: 10px;
+			border: 1px solid #000;
+			background: #FFF;
+			float: left;
+		}
+
+		#data-range>.years:last-child {
+			left: 99.8%;
+			top: -10px;
+			position: relative;
+			border: 1px solid #000;
+		}
+
+		#data-range>.input>.years.empty,
+		#data-range>.years.empty {
+			background: #ccc;
+		}
 	</style>
 	<script>
-	let range = [
-		{
-			label : '2015<br/>Весна',
-			val : 1
-		},
-		{
-			label : '2015<br/>Лето',
-			val : 2,
-			isEmpty : true
-		},
-		{
-			label : '2015<br/>Осень',
-			val : 3,
-			isEmpty : false
-		},
-		{
-			label : '2015<br/>3има',
-			val : 4,
-			isEmpty : false,
-			isFirst : true
-		},
-
-	];
-	app = new Vue({
-		el: '#app',
-		data : {
-			range : range
-		}
-	});
-
+		let rangeYear = [{
+			label: '2015',
+			val: 1
+		}, {
+			label: '2016',
+			val: 2,
+			isEmpty: true
+		}, {
+			label: '2017',
+			val: 3,
+			isEmpty: false
+		}, {
+			label: '2018',
+			val: 4,
+			isEmpty: false
+		}, {
+			label: '2019',
+			val: 5,
+			isEmpty: false
+		}, {
+			label: '2020',
+			val: 6,
+			isEmpty: false,
+			isFirst: true
+		}, ];
+		let rangeSes = [{
+			"year": 2012,
+			"num": 2,
+			"label": "2012<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2012,
+			"num": 3,
+			"label": "2012<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2012,
+			"num": 4,
+			"label": "2012<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2012,
+			"num": 5,
+			"label": "2012<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2013,
+			"num": 1,
+			"label": "2013<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2013,
+			"num": 2,
+			"label": "2013<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2013,
+			"num": 3,
+			"label": "2013<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2013,
+			"num": 4,
+			"label": "2013<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2013,
+			"num": 5,
+			"label": "2013<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2014,
+			"num": 1,
+			"label": "2014<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2014,
+			"num": 2,
+			"label": "2014<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2014,
+			"num": 3,
+			"label": "2014<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2014,
+			"num": 4,
+			"label": "2014<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2014,
+			"num": 5,
+			"label": "2014<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2015,
+			"num": 1,
+			"label": "2015<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2015,
+			"num": 2,
+			"label": "2015<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2015,
+			"num": 3,
+			"label": "2015<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2015,
+			"num": 4,
+			"label": "2015<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2015,
+			"num": 5,
+			"label": "2015<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2016,
+			"num": 1,
+			"label": "2016<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2016,
+			"num": 2,
+			"label": "2016<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2016,
+			"num": 3,
+			"label": "2016<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2016,
+			"num": 4,
+			"label": "2016<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2016,
+			"num": 5,
+			"label": "2016<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2017,
+			"num": 1,
+			"label": "2017<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2017,
+			"num": 2,
+			"label": "2017<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2017,
+			"num": 3,
+			"label": "2017<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2017,
+			"num": 4,
+			"label": "2017<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2017,
+			"num": 5,
+			"label": "2017<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2018,
+			"num": 1,
+			"label": "2018<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2018,
+			"num": 2,
+			"label": "2018<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2018,
+			"num": 3,
+			"label": "2018<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2018,
+			"num": 4,
+			"label": "2018<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2018,
+			"num": 5,
+			"label": "2018<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2019,
+			"num": 1,
+			"label": "2019<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2019,
+			"num": 2,
+			"label": "2019<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2019,
+			"num": 3,
+			"label": "2019<i class=\"fa fa-sun-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2019,
+			"num": 4,
+			"label": "2019<i class=\"fa fa-envira\" aria-hidden=\"true\"></i>"
+		}, {
+			"year": 2019,
+			"num": 5,
+			"label": "2019<i class=\"fa fa-snowflake-o\" aria-hidden=\"true\"></i>"
+		}, {
+			"label": "2019",
+			"year": "all",
+			"num": "all",
+			"isFirst": true
+		}];
+		app = new Vue({
+			el: '#app',
+			data: {
+				range: rangeSes,
+				type: 'seasons'
+			}
+		});
 	</script>
 	<style media="screen">
-	.wrap {
-		padding: 100px;
-	}
-	#app {
-	  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-	  -webkit-font-smoothing: antialiased;
-	  -moz-osx-font-smoothing: grayscale;
-	  text-align: center;
-	  color: #2c3e50;
-	  margin-top: 60px;
-	}
+		.wrap {
+			padding: 100px;
+		}
 
-	h1, h2 {
-	  font-weight: normal;
-	}
+		#app {
+			font-family: 'Avenir', Helvetica, Arial, sans-serif;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			text-align: center;
+			color: #2c3e50;
+			margin-top: 60px;
+		}
 
+		h1,
+		h2 {
+			font-weight: normal;
+		}
 
-	a {
-	  color: #42b983;
-	}
+		a {
+			color: #42b983;
+		}
 	</style>
-  </body>
+</body>
+
 </html>

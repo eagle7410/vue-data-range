@@ -9,6 +9,13 @@
 			></li>
 		</ul>
 		<div class="input" id="slider"></div>
+		<div class="labelsYears" v-show="years.length">
+			<span
+				v-for="year in years"
+				class="labelYear"
+				:data-count="year.seasonsCount"
+			>{{year.val}}</span>
+		</div>
 	</div>
 </template>
 
@@ -29,10 +36,16 @@ export default {
 		heightLabel : {
 			type : Number,
 			default : 2
+		},
+		type : {
+			type : String,
+			default : 'seasons',
+			validator : (val) => ~['seasons', 'years'].indexOf(val)
 		}
 	},
 	data () {
 		return {
+			years : [],
 			range : [],
 			step : 1,
 			min : 0,
@@ -168,9 +181,51 @@ export default {
 	created() {
 		let that = this;
 		let w = window;
+		let rangeLen = that.dataRange.length;
 
-		if (that.dataRange.length) {
+		if (rangeLen) {
 			that.range = that.dataRange;
+			if (that.type == 'seasons') {
+
+				let currentYear = new Date().getFullYear();
+				let beCurrent = false;
+
+				for (let i = 0; i < rangeLen; i++) {
+					let range = that.dataRange[i];
+					let year = range.year;
+					let isBe = false;
+
+					if (year == 'all')
+						continue;
+
+					if (year == currentYear)
+						beCurrent = true;
+
+					that.years = that.years.map(el => {
+						if(el.val == year) {
+							el.seasonsCount++;
+							isBe = true;
+						}
+
+						return el;
+					});
+
+					if (isBe) continue;
+
+					that.years.push({
+						val : year,
+						seasonsCount : 1
+					});
+				}
+
+				if(!beCurrent) {
+					that.years.push({
+						val : currentYear,
+						seasonsCount : 1
+					});
+				}
+
+			}
 		}
 
 		that.val = 0;
@@ -212,12 +267,25 @@ export default {
 	},
 	mounted () {
 		let that = this;
-		let labelWidth = that.percent * $('#data-range').width() / 100;
+		let widthDataRange = $('#data-range').width();
+		let labelWidth = that.percent * widthDataRange / 100;
 		let $labels = $('#data-range > .labels');
 		that.sliderIni();
 		$labels.width($labels.width() + labelWidth);
 		$labels.find('li').width(labelWidth);
 
+		if (that.years.length) {
+				let $years = $('#data-range > .labelsYears');
+				let width = (100 / that.years.length) * widthDataRange / 100;
+				$years.width($labels.width()).css('left' , `${(labelWidth / 2) + (width/2)}px`);
+
+				$years.find('.labelYear').each(function() {
+					let $year = $(this);
+					let count = $year.data('count');
+					$year.width(count * labelWidth);
+				});
+
+		}
 	}
 }
 </script>
