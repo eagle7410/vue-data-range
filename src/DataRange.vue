@@ -216,10 +216,7 @@ export default {
 			if (rangeLen > 1) {
 				$range.show();
 				that.range = range;
-
-				let currentYear = new Date().getFullYear();
-				let beCurrent = false;
-
+				that.years = [];
 				for (let i = 0; i < rangeLen; i++) {
 					let range = that.range[i];
 					let year = range.year;
@@ -227,9 +224,6 @@ export default {
 
 					if (year == 'all')
 						continue;
-
-					if (year == currentYear)
-						beCurrent = true;
 
 					that.years = that.years.map(el => {
 						if(el.val == year) {
@@ -244,13 +238,6 @@ export default {
 
 					that.years.push({
 						val : year,
-						seasonsCount : 1
-					});
-				}
-
-				if(!beCurrent) {
-					that.years.push({
-						val : currentYear,
 						seasonsCount : 1
 					});
 				}
