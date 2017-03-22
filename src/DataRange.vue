@@ -47,6 +47,7 @@ export default {
 		return {
 			years : [],
 			range : [],
+			type : 'seasons',
 			step : 1,
 			min : 0,
 			val : 0,
@@ -74,7 +75,7 @@ export default {
 		 */
 		classLabel (data, num) {
 			let that = this;
-			let c = 'data-range-labels ' + that.typeTime;
+			let c = 'data-range-labels ' + that.type;
 
 			if (that.val == num) {
 				c += ' active';
@@ -209,8 +210,11 @@ export default {
 		dataRangeToRange (range) {
 			let that = this;
 			let rangeLen = range.length;
+			let $range =  $('#data-range');
+			$range.hide();
 
-			if (rangeLen) {
+			if (rangeLen > 1) {
+				$range.show();
 				that.range = range;
 
 				let currentYear = new Date().getFullYear();
@@ -266,12 +270,12 @@ export default {
 	created() {
 		let that = this;
 		let w = window;
-
+		that.type = that.typeTime;
 		that.dataRangeToRange(that.dataRange)
 
 		if (w.vueEvents) {
 			w.vueEvents.$on('cartogramsDataRangeUpdate', function (ev) {
-				that.typeTime = ev.typeTime;
+				that.type= ev.typeTime;
 				that.dataRangeToRange(ev.range);
 
 				if (that.range[that.val].isEmpty) {
